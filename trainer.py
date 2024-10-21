@@ -3,8 +3,9 @@ import torch
 from dataset import medicalImageDataset
 import torch.nn as nn
 import torch.optim as optim
+import torch.nn.functional as F
 from tqdm import tqdm
-from torchvision.models import ResNet18_Weights
+from torchvision.models import ResNet50_Weights
 import argparse
 import sys
 import logging
@@ -13,10 +14,34 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 1
 LEARNING_RATE=0.001
 
-model = torchvision.models.resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)
+class adjustedResNet50(nn.Module):
 
-# drop last linear layer and fit new linear layer for our dataset
-model.fc = nn.Linear(in_features=512, out_features=8)
+    def __init__(self, num_classes=8):
+
+        super(adjustedResNet50, self).__init__()
+
+        self.model = torchvision.models.resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
+
+        # remove the final connected layer by putting a placeholder
+        self.model.fc = nn.Identity()
+
+        self.flatten = nn.Flatten()
+        self.fc1 = nn.Linear(2048,1000)
+        self.fc2 = nn.Linear(1000, num_classes)
+
+    def forward(self, x):
+
+        x = self.model(x)
+
+        x = self.flatten(x)
+        x = self.fc1(x)
+        x = F.relu(x)
+        x = self.fc2(x)
+        x = F.softmax(x, dim=1)
+
+        return x
+    
+model = adjustedResNet50()
 
 optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=0.9)
 
@@ -127,7 +152,7 @@ def train(model, train_loader, criterion, check_val_every_n_epoch, epochs):
 
                 for i, (input,labels) in val_pbar:
 
-                    inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
+                    inputs, labels = input.to(DEVICE), labels.to(DEVICE)
 
                     outputs = model(inputs)
 
