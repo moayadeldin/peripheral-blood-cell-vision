@@ -1,22 +1,24 @@
 import torchvision
 from torchvision.models import ResNet50_Weights
+from torchvision.models import ResNet18_Weights
 import torch.nn as nn
 import torch.nn.functional as F
 
 
-class adjustedResNet50(nn.Module):
+class adjustedResNet(nn.Module):
 
-    def __init__(self, num_classes=8):
+    def __init__(self, weights=ResNet50_Weights.IMAGENET1K_V1, 
+                 pretrained_resnet=torchvision.models.resnet50,fc1_input=2048, num_classes=8):
 
-        super(adjustedResNet50, self).__init__()
+        super(adjustedResNet, self).__init__()
 
-        self.model = torchvision.models.resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
+        self.model = pretrained_resnet(weights)
 
         # remove the final connected layer by putting a placeholder
         self.model.fc = nn.Identity()
 
         self.flatten = nn.Flatten()
-        self.fc1 = nn.Linear(2048,1000)
+        self.fc1 = nn.Linear(fc1_input,1000)
         self.fc2 = nn.Linear(1000, num_classes)
 
     def forward(self, x):

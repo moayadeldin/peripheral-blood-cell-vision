@@ -7,7 +7,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import sys
 import logging
-from resnet import adjustedResNet50
+from resnet import adjustedResNet
 
 torch.manual_seed(42)
 
@@ -211,7 +211,7 @@ class Trainer:
         v_acc = [item[1] for item in self.val_accuracies]
 
         fig, ax = plt.subplots(1,2, figsize=(12,5))
-        fig.suptitle(f"ResNet 50 Trained on Peripheral Blood Cells Dataset")
+        fig.suptitle(f"ResNet 18 Trained on Peripheral Blood Cells Dataset")
 
         ax[0].set_title(f"Loss with Batch Size={BATCH_SIZE} & Learning Rate = {LEARNING_RATE}")
         ax[0].plot(t_iters, t_loss)
@@ -234,16 +234,16 @@ class Trainer:
         fig.savefig(f"plots/evaluation_metrics.png")
         plt.show()
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    model = adjustedResNet50()
+#     model = adjustedResNet()
 
-    model_trainer = Trainer(model=model)
+#     model_trainer = Trainer(model=model)
 
-    model_trainer.train()
+#     model_trainer.train()
 
-    model_trainer.test()
+#     model_trainer.test()
 
-    model_trainer.saveModel('best_weights.pth')
+#     model_trainer.saveModel('best_weights.pth')
 
 
