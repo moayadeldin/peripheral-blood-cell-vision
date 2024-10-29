@@ -21,10 +21,6 @@ TRAIN_DIR = "DataSet_Splitted/train"
 VAL_DIR = "DataSet_Splitted/val"
 TEST_DIR = "DataSet_Splitted/test"
 
-###############################################################
-# ADJUST THE TRANSFORMATIONS ACCORDING TO THE MODEL YOU WILL USE
-###############################################################
-
 train_dataset = medicalImageDataset(root_dir=TRAIN_DIR, transform=transformations)
 train_loader = torch.utils.data.DataLoader(
     train_dataset,

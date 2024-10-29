@@ -3,32 +3,36 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class adjustedEfficientNet(nn.Module):
+    
 
-      def __init__(self,fc1_input):
+   def __init__(self):
 
-         super(adjustedEfficientNet, self).__init__()
+      super(adjustedEfficientNet,self).__init__()
 
-         self.fc1_input=fc1_input
-         
-         self.model = torch.hub.load('NVIDIA/DeepLearningExamples:torchhub', 'nvidia_efficientnet_b0', pretrained=True)
+      self.model = torch.hub.load('NVIDIA/DeepLearningExamples:torchhub', 'nvidia_efficientnet_b0', pretrained=True)
 
-         self.model.fc = nn.Identity()
+      in_features = self.model.classifier.fc.in_features
 
-         self.flatten = nn.Flatten()
-         self.fc1 = nn.Linear(self.fc1_input,1000)
-         self.fc2 = nn.Linear(1000,8)
+      self.model.classifier.fc = nn.Identity()
 
-      def forward(self, x):
+      self.fc1 = nn.Linear(in_features,1000)
+      self.fc2 = nn.Linear(1000,8)
 
-         x = self.model(x)
+   
+   def forward(self, x):
 
-         x = self.flatten(x)
-         x = self.fc1(x)
-         x = F.relu(x)
-         x = self.fc2(x)
-         x = F.softmax(x, dim=1)
+      x = self.model(x)
+      x = self.fc1(x)
+      x = F.relu(x)
+      x = self.fc2(x)
+      x = F.softmax(x,dim=1)
 
-         return x
+      return x
+   
+
+
+
+
 
 
 
