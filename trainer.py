@@ -7,7 +7,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import sys
 import logging
-from resnet import adjustedResNet
+from utilities import transformations
 
 torch.manual_seed(42)
 
@@ -21,7 +21,11 @@ TRAIN_DIR = "DataSet_Splitted/train"
 VAL_DIR = "DataSet_Splitted/val"
 TEST_DIR = "DataSet_Splitted/test"
 
-train_dataset = medicalImageDataset(root_dir=TRAIN_DIR)
+###############################################################
+# ADJUST THE TRANSFORMATIONS ACCORDING TO THE MODEL YOU WILL USE
+###############################################################
+
+train_dataset = medicalImageDataset(root_dir=TRAIN_DIR, transform=transformations)
 train_loader = torch.utils.data.DataLoader(
     train_dataset,
     batch_size=BATCH_SIZE,
@@ -29,7 +33,7 @@ train_loader = torch.utils.data.DataLoader(
     num_workers=4
 )
 
-val_dataset = medicalImageDataset(root_dir=VAL_DIR)
+val_dataset = medicalImageDataset(root_dir=VAL_DIR, transform=transformations)
 val_loader = torch.utils.data.DataLoader(
     val_dataset,
     batch_size=BATCH_SIZE,
@@ -37,7 +41,7 @@ val_loader = torch.utils.data.DataLoader(
     num_workers=4
 )
 
-test_dataset = medicalImageDataset(root_dir=TEST_DIR)
+test_dataset = medicalImageDataset(root_dir=TEST_DIR, transform=transformations)
 test_loader = torch.utils.data.DataLoader(
     test_dataset,
     batch_size=BATCH_SIZE,

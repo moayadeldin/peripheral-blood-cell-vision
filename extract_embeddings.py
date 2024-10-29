@@ -6,7 +6,6 @@ from tqdm import tqdm
 import numpy as np
 from resnet import adjustedResNet
 from dataset import medicalImageDataset
-from dataset import transformations
 
 TRAIN_DIR = "DataSet_Splitted/train"
 BATCH_SIZE = 16

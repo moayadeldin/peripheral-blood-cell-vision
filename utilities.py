@@ -3,7 +3,23 @@ import matplotlib.pyplot as plt
 import argparse 
 import random as r
 import cv2
+import torchvision
 import splitfolders
+
+transformations = torchvision.transforms.Compose([
+    # torchvision.transforms.ToPILImage(), # as I upload raw images
+
+    torchvision.transforms.Resize(size=(224,224)), # resize images to the needed size of ResNet50
+
+    torchvision.transforms.ToTensor(), # convert images to tensors
+
+    torchvision.transforms.Normalize(
+        
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+    )    
+
+])
 
 
 class_dist = {}
@@ -83,27 +99,6 @@ def dataSplit(dir, split_dir, train_ratio=0.8, validation_ratio=0.1, test_ratio=
                        ratio=(train_ratio, validation_ratio, test_ratio),
                        group_prefix=None,
                        move=False)
-    
-
-
-def main():
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument("--input_dir", help="Path to the directory containing the dataset.")
-    parser.add_argument("--split_dir", help="Path to the splitted dataset.",default=None)
-
-    args = parser.parse_args()
-
-    print(calculateClassDistribution(args.input_dir))
-    classDistribution()
-    getSamples(args.input_dir)
-    dataSplit(args.input_dir, args.split_dir)
-
-
-if __name__ == "__main__":
-
-    main()
 
 
 
