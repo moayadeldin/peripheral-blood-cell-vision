@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 import numpy as np
-from resnet import adjustedResNet
+from models.resnet import adjustedResNet
 from dataset import medicalImageDataset
 
 TRAIN_DIR = "DataSet_Splitted/train"

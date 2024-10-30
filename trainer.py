@@ -211,7 +211,7 @@ class Trainer:
         v_acc = [item[1] for item in self.val_accuracies]
 
         fig, ax = plt.subplots(1,2, figsize=(12,5))
-        fig.suptitle(f"ResNet 18 Trained on Peripheral Blood Cells Dataset")
+        fig.suptitle(f"EfficientNet Trained on Peripheral Blood Cells Dataset")
 
         ax[0].set_title(f"Loss with Batch Size={BATCH_SIZE} & Learning Rate = {LEARNING_RATE}")
         ax[0].plot(t_iters, t_loss)
